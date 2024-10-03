@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Search</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center">Search Users</h1>
+      <form
+        method="POST"
+        action="{{ url_for('search_users_view') }}"
+        class="mb-4"
+      >
+        <div class="input-group">
+          <input
+            type="text"
+            name="search_query"
+            class="form-control"
+            placeholder="Enter username or name"
+            required
+          />
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </div>
+      </form>
+
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="alert alert-warning">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %} {% if search_results %}
+      <h2>Search Results:</h2>
+      <ul class="list-group">
+        {% for user in search_results %}
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          {{ user.name }}
+          <form
+            method="POST"
+            action="{% if user.is_following %}{{ url_for('unfollow_user_route', user_id=user.id) }}{% else %}{{ url_for('follow_user_route', user_id=user.id) }}{% endif %}"
+          >
+            <button
+              class="btn btn-sm {% if user.is_following %}btn-danger{% else %}btn-success{% endif %}"
+              type="submit"
+            >
+              {% if user.is_following %}Unfollow{% else %}Follow{% endif %}
+            </button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No users found.</p>
+      {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,188 @@
+/* Global styles */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex: 1; /* Ensures the main content takes up available space */
+    padding: 10px
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+    float: right;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Layout structure */
+header {
+    background-color: #007BFF;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+
+footer {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Dashboard styles */
+.dashboard-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.navbar {
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    background-color: #007BFF;
+    padding: 20px 20px;
+    color: #fff;
+}
+
+.logo {
+    font-size: 24px;
+}
+
+.logout-link:hover {
+    color: red;
+}
+
+.profile-section {
+    margin-top: 20px;
+    border: 2px solid #007BFF;
+    text-align: center;
+}
+
+.profile-picture {
+    border-radius: 10%;
+    width: auto;
+    max-height: 400px;
+    box-shadow: 2px, 2px, 5px, rgba(0, 0, 0, 0.3);
+}
+
+.image-placeholder {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.custom-file-input {
+    margin-top: 10px;
+}
+
+.submit-button {
+    display: block;
+    margin: 10px auto;
+}
+
+/* Login styles */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-form .form-input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Flash messages */
+.flashes {
+    list-style-type: none;
+    padding: 0;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert.danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert.warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert.info {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+/* Custom file input */
+.custom-file-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.custom-file-label:hover {
+    background-color: #0056b3;
+}
+
+.custom-file-input {
+    display: none;
+}

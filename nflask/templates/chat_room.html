@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Room</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <h2>Chat Room</h2>
+    </header>
+
+    <!-- Flash messages section -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+      <li class="alert alert-{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+
+    <main class="container">
+      <!-- Chat history -->
+      <div id="chat-history" class="chat-history">
+        {% for chat in chat_history %}
+        <div
+          id="chat-box"
+          class="{% if 'You' in chat.sender_name %} right-align {% else %} left-align {% endif %}"
+        >
+          <small class="info"><em>{{ chat.sender_name }} </em></small><br />
+          <span class="messages">{{ chat.message }}<br /></span>
+          <small class="info"><em>{{ chat.timestamp }}</em></small>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Message form -->
+      <form method="POST" id="myForm">
+        <textarea
+          name="message"
+          placeholder="Type your message..."
+          required
+        ></textarea
+        ><br />
+        <button type="submit" class="submit-button">Send</button>
+      </form>
+      <br />
+
+      <!-- Back to messages button -->
+      <div>
+        <a
+          href="{{ url_for('messages_route', username=session['username']) }}"
+          class="btn btn-secondary"
+          >Back to Messages</a
+        >
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Remgram. All rights reserved.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat_scroll.js') }}"></script>
+  </body>
+</html>
