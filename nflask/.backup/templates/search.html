@@ -57,7 +57,7 @@
               method="POST"
               action="{% if user.is_following %}{{ url_for('unfollow_user_route', user_id=user.id, username=session['username']) }}{% else %}{{ url_for('follow_user_route', user_id=user.id, username=session['username']) }}{% endif %}"
             >
-              <button type="submit">
+              <button type="submit" class="submit-button">
                 {% if user.is_following %}Unfollow{% else %}Follow{% endif %}
               </button>
             </form>

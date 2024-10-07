@@ -32,3 +32,21 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 
 -- Posts table
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    picture LONGBLOB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    likes INT NOT NULL DEFAULT 0
+);
+
+-- Likes table
+CREATE TABLE likes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id)
+);
+

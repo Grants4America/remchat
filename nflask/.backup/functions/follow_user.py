@@ -23,7 +23,7 @@ def follow_user(user_id):
         # Check if the user is trying to follow themselves
         if current_user_id[0] == user_id:
             flash('You cannot follow yourself!', 'warning')
-            return redirect(url_for('dashboard', username=current_user))
+            return redirect(url_for('search_users_view', username=current_user))
 
         # Check if the follow relationship already exists
         cursor.execute("SELECT COUNT(*) FROM followers WHERE user_id = %s AND followed_user_id = %s", (current_user_id[0], user_id))
@@ -43,7 +43,7 @@ def follow_user(user_id):
             conn.commit()
             flash('User followed successfully!', 'success')
 
-        return redirect(url_for('dashboard', username=current_user))
+        return redirect(url_for('search_users_view', username=current_user))
 
     finally:
         conn.close()

@@ -38,7 +38,7 @@ def unfollow_user(user_id):
             conn.commit()
             flash('User unfollowed successfully!', 'success')
 
-        return redirect(url_for('dashboard', username=current_user))
+        return redirect(url_for('search_users_view', username=current_user))
 
     finally:
         conn.close()
