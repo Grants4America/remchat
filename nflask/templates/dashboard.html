@@ -14,7 +14,12 @@
     <header>
       <nav class="navbar">
         <h1 class="logo">Remgram</h1>
-        <a href="/logout" class="logout-link">Logout</a>
+        <a
+          href="/logout"
+          class="submit-button"
+          style="float: right; padding-right: 30px"
+          >Logout</a
+        >
       </nav>
     </header>
 
@@ -107,10 +112,23 @@
       </section>
       <br />
 
-      <!-- Back Button to Dashboard -->
+      <!-- Go to Messages -->
       <section>
-        <a href="{{ url_for('messages_route', username=session['username']) }}"
+        <a
+          href="{{ url_for('messages_route', username=session['username']) }}"
+          class="submit-button"
+	  style="float: left;"
           >Go to Messages</a
+        >
+      </section>
+	
+      <!-- Go to Posts -->
+      <section>
+        <a
+          href="{{ url_for('posts_view', username=session['username']) }}"
+          class="submit-button"
+	  style="float: right;"
+          >Go to Posts</a
         >
       </section>
     </main>

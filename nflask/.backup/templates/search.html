@@ -6,66 +6,84 @@
     <title>User Search</title>
     <link
       rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      href="{{ url_for('static', filename='css/styles.css') }}"
     />
   </head>
+
   <body>
-    <div class="container mt-5">
-      <h1 class="text-center">Search Users</h1>
-      <form
-        method="POST"
-        action="{{ url_for('search_users_view') }}"
-        class="mb-4"
-      >
-        <div class="input-group">
-          <input
-            type="text"
-            name="search_query"
-            class="form-control"
-            placeholder="Enter username or name"
-            required
-          />
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="submit">Search</button>
-          </div>
-        </div>
-      </form>
+    <header>
+      <h2>Search Users</h2>
+    </header>
 
-      {% with messages = get_flashed_messages() %} {% if messages %}
-      <div class="alert alert-warning">
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-      {% endif %} {% endwith %} {% if search_results %}
-      <h2>Search Results:</h2>
-      <ul class="list-group">
-        {% for user in search_results %}
-        <li
-          class="list-group-item d-flex justify-content-between align-items-center"
+    <main class="container">
+      <div>
+        <!-- Flash messages section -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+          <li class="alert alert-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+
+        <!-- User Search Form -->
+        <form
+          method="POST"
+          action="{{ url_for('search_users_view', username=session['username']) }}"
+          id="myForm"
         >
-          {{ user.name }}
-          <form
-            method="POST"
-            action="{% if user.is_following %}{{ url_for('unfollow_user_route', user_id=user.id) }}{% else %}{{ url_for('follow_user_route', user_id=user.id) }}{% endif %}"
-          >
-            <button
-              class="btn btn-sm {% if user.is_following %}btn-danger{% else %}btn-success{% endif %}"
-              type="submit"
-            >
-              {% if user.is_following %}Unfollow{% else %}Follow{% endif %}
-            </button>
-          </form>
-        </li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p>No users found.</p>
-      {% endif %}
-    </div>
+          <div>
+            <input
+              type="text"
+              name="search_query"
+              placeholder="Enter username or name"
+              required
+            />
+            <div>
+              <button type="submit" class="submit-button">Search</button>
+            </div>
+          </div>
+        </form>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- Search Results -->
+        {% if search_results %}
+        <h2>Search Results:</h2>
+        <ul>
+          {% for user in search_results %}
+          <li>
+            {{ user.name }}
+            <form
+              method="POST"
+              action="{% if user.is_following %}{{ url_for('unfollow_user_route', user_id=user.id, username=session['username']) }}{% else %}{{ url_for('follow_user_route', user_id=user.id, username=session['username']) }}{% endif %}"
+            >
+              <button type="submit">
+                {% if user.is_following %}Unfollow{% else %}Follow{% endif %}
+              </button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No users found.</p>
+        {% endif %}
+      </div>
+
+      <br />
+      <!-- Back Button to Dashboard -->
+      <div>
+        <a
+          href="{{ url_for('dashboard', username=session['username']) }}"
+          class="submit-button"
+          >Back to Dashboard</a
+        >
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Remgram. All rights reserved.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
   </body>
 </html>

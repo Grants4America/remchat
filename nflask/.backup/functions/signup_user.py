@@ -6,6 +6,7 @@ from bcrypt import hashpw, gensalt
 def signup_user():
     name = request.form['name']
     username = request.form['username']
+    email = request.form['email']
     password = request.form['password']
 
     conn = get_db_connection()
@@ -20,7 +21,7 @@ def signup_user():
         flash('Username already exists! 😞', 'danger')
         return redirect(url_for('signup'))
 
-    cursor.execute("INSERT INTO users (name, username, password) VALUES (%s, %s, %s)", (name, username, hashed_password.decode('utf-8')))
+    cursor.execute("INSERT INTO users (name, username, email, password) VALUES (%s, %s, %s, %s)", (name, username, email, hashed_password.decode('utf-8')))
     conn.commit()
     flash('Registration successful! 🎉', 'success')
     return redirect(url_for('index'))

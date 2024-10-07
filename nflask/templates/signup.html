@@ -56,13 +56,13 @@
           />
           <span id="errorMessage" style="color: red"></span>
           <br />
-          <button type="submit">Sign Up</button>
+          <button type="submit" class="submit-button">Sign Up</button>
         </form>
         <br />
 
-        <button>
-          <a href="{{ url_for('index') }}">Sign In</a>
-        </button>
+        
+          <a href="{{ url_for('index') }}" "><button class="submit-button">Sign In</button></a>
+        
 
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %} {% if

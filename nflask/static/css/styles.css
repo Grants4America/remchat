@@ -56,11 +56,33 @@ h3 {
 }
 
 .form-input {
-  margin-bottom: 15px;
+  margin-bottom: 16px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
+}
+
+/* Button Styles */
+.btn,
+.submit-button {
+  width: auto;
+  max-width: 200px;
+  text-decoration: none;
+  color: #333;
+  background-color: #ddd;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.btn:hover,
+.submit-button:hover {
+  background-color: #333;
+  color: #ddd;
 }
 
 /* Profile Picture Styles */
@@ -98,29 +120,11 @@ h3 {
   color: #888;
 }
 
-/* Button Styles */
-.btn,
-.submit-button {
-  width: 30%;
-  background-color: #ddd;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 16px;
-}
-
 .logout-link {
   float: right;
   margin-right: 20px;
 }
 
-.btn:hover,
-.submit-button:hover {
-  background-color: #333;
-  color: #ddd;
-}
 /* Message view format */
 .right-align {
   text-align: right;
@@ -154,24 +158,6 @@ textarea {
 .info {
   font-size: 15px;
   color: #ddd;
-}
-
-a {
-  color: #333;
-  text-decoration: none;
-  background-color: #ddd;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-a:hover {
-  background-color: #333;
-  color: #ddd;
-}
-
-a:active {
-  background-color: #555;
 }
 
 /* Alert and Flash Message Styles */
@@ -242,5 +228,103 @@ footer {
   .profile-picture-section {
     max-width: 150px;
     height: 150px;
+  }
+}
+
+/* Parent post container styling */
+#post-container {
+  max-width: 800px; /* Limit the width of the feed */
+  margin: 0 auto; /* Center the container on the page */
+  padding: 20px; /* Add padding inside the container */
+  display: flex;
+  flex-direction: column; /* Stack posts vertically */
+  gap: 20px; /* Add space between each post */
+}
+
+/* Individual post styling */
+.post {
+  background-color: #f9f9f9; /* Light background for the post */
+  padding: 20px; /* Padding inside the post */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  gap: 10px; /* Space between elements inside the post */
+}
+
+/* Post content styling */
+.post p {
+  margin: 0; /* Remove default margins for post paragraphs */
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333; /* Dark text color */
+}
+
+/* Image styling */
+.picture-posted {
+  max-width: 100%; /* Make the image responsive */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 8px; /* Slightly rounded corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Shadow for the image */
+  margin-top: 10px; /* Add space between the image and the text */
+  display: block; /* Ensure image behaves as a block element */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+.picture-posted:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+}
+
+.text-post .text-content {
+  margin: 0; /* Remove default margins for post paragraphs */
+  font-size: 2rem;
+  line-height: 1.5;
+  color: #333;
+  background-color: #ddd;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+.text-post .text-content:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+}
+/* Like button styling */
+.like-btn {
+  width: 20%;
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  padding: 8px 12px; /* Padding inside the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.like-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Loader styling */
+#loading {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+  padding: 10px 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+  #post-container {
+    padding: 10px; /* Reduce padding on small screens */
+  }
+
+  .post {
+    padding: 15px; /* Reduce padding for the post on mobile */
   }
 }

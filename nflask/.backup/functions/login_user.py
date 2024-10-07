@@ -15,8 +15,10 @@ def login_user():
 
     if user and checkpw(password.encode('utf-8'), user[3].encode('utf-8')):
         name = user[1]
+        user_id = user[0]
         session['username'] = username
         session['name'] = name
+        session['user_id'] = user_id
         make_resp = make_response(redirect(url_for('dashboard', username=session['username'])))
         make_resp.set_cookie('logged_in', 'true', max_age=60*60*24)
         return make_resp

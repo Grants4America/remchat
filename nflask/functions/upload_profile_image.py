@@ -23,7 +23,7 @@ def upload_profile_image():
             
             if photo:
                 flash('Image uploaded successfully!', 'success')
-                return redirect(url_for('dashboard', img=photo.decode("utf-8"), username=session['username']))
+                return redirect(url_for('dashboard', img=photo, username=session['username']))
             
     flash('Failed to upload image! 😞', 'danger')
     return redirect(url_for('dashboard', username=session['username']))

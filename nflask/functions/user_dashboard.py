@@ -30,7 +30,11 @@ def user_dashboard():
             return redirect(url_for('index'))
 
         photo = details[5]  # Assuming the photo is at index 5
-        return render_template('dashboard.html', img=photo.decode('utf-8') if photo else None, details=details)
+        if photo:
+            photo = photo.decode('utf-8')
+        else:
+            photo = None
+        return render_template('dashboard.html', img=photo if photo else None, details=details)
 
     finally:
         conn.close()

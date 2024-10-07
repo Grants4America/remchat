@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Post</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <header class="logo">
+      <h4>Create a New Post</h4>
+    </header>
+    <br />
+    <a href="{{ url_for('posts_view', username=session['username']) }}"
+      ><button class="submit-button" style="float: right">
+        Back to Posts
+      </button></a
+    >
+
+    <form
+      action="{{ url_for('post_content_view', username=session['username']) }}"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <input
+        type="file"
+        id="image"
+        name="image"
+        class="custom-file-input"
+        accept="image/*"
+      /><br />
+      <textarea
+        name="content"
+        placeholder="Write something..."
+        rows="5"
+        cols="40"
+        required
+      ></textarea
+      ><br />
+      <button type="submit" class="submit-button">Post</button>
+    </form>
+
+    <footer>
+      <p>&copy; 2024 Remgram. All rights reserved.</p>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+  </body>
+</html>

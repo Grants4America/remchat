@@ -36,9 +36,10 @@
       </form>
 
       <br />
-      <button>
-        <a href="{{ url_for('signup') }}">Sign Up</a>
-      </button>
+
+      <a href="{{ url_for('signup') }}"
+        ><button class="submit-button">Sign Up</button></a
+      >
 
       <!-- Flash Messages -->
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
