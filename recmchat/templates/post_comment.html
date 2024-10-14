@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comments</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='remchat_logo.png') }}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+
+  <body>
+    <header></header>
+
+    <main class="container">
+      <!-- Back to Posts Button -->
+      <a
+        href="{{ url_for('posts_view', username=session['username']) }}"
+        style="width: 10%"
+        class="submit-button"
+      >
+        ⬅️
+      </a>
+
+      <div class="comments-section">
+        <h4>Comments</h4>
+
+        <!-- Comment Form -->
+        <form
+          action="{{ url_for('comment_page_view', post_id=1) }}"
+          method="POST"
+          class="comment-form"
+        >
+          <input
+            type="text"
+            name="comment"
+            placeholder="Add a comment..."
+            required
+          />
+          <button type="submit">Comment</button>
+        </form>
+
+        <!-- Comments List -->
+        <div class="comments-list">
+          {% if comments %} {% for comment in comments %}
+          <div class="comment">
+            <strong>User {{ comment.user_id }}:</strong>
+            <p>{{ comment.content }}</p>
+            <small>{{ comment.created_at }}</small>
+          </div>
+          {% endfor %} {% else %}
+          <p>No comments yet.</p>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+
+    <footer></footer>
+  </body>
+</html>
