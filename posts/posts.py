@@ -1,5 +1,6 @@
 from flask import request, render_template, flash, session, redirect, url_for
 from functions.get_db_connection import get_db_connection
+from flask_babel import format_date, format_time
 from functions.system_picture import system_picture
 
 from flask import render_template, session, flash, request
@@ -96,7 +97,7 @@ def load_paginated_posts():
                         'user_id': user_id,
                         'content': content,
                         'picture': picture.decode('utf-8') if picture else None,
-                        'created_at': created_at,
+                        'created_at': format_date(created_at.date()) + " " +format_time(created_at.time()),
                         'likes': likes or 0,  # Default to 0 if None
                         'is_liked_by_current_user': post_id in liked_posts,
                         'creator_name': creator_name,

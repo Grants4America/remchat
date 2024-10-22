@@ -85,5 +85,33 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script>
+      // Get the input elements
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+
+      // Load the saved values from local storage
+      window.onload = function () {
+        const savedUsername = localStorage.getItem("username");
+        const savedPassword = localStorage.getItem("password");
+
+        if (savedUsername) {
+          usernameInput.value = savedUsername;
+        }
+
+        if (savedPassword) {
+          passwordInput.value = savedPassword;
+        }
+      };
+
+      // Save the values to local storage when the input changes
+      usernameInput.addEventListener("input", function () {
+        localStorage.setItem("username", usernameInput.value);
+      });
+
+      passwordInput.addEventListener("input", function () {
+        localStorage.setItem("password", passwordInput.value);
+      });
+    </script>
   </body>
 </html>

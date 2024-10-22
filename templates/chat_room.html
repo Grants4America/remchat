@@ -98,11 +98,11 @@
             id="myDiv"
           >
             <!-- Sender Name (for received messages only) -->
-            {% if 'You' not in chat.sender_name %}
+            <!-- {% if 'You' not in chat.sender_name %}
             <div class="sender-info">
               <small><em>{{ chat.sender_name }}</em></small>
             </div>
-            {% endif %}
+            {% endif %} -->
 
             <!-- Message Content -->
             <div class="message-content">
@@ -138,6 +138,7 @@
 
         <!-- Hidden Data Divs for JavaScript -->
         <div id="targetUsername" data-value="{{ user_info.name }}"></div>
+        <div id="room_id" data-value="{{ room }}"></div>
         <div
           id="sessionUsername"
           data-username="{{ session['username'] }}"
@@ -148,5 +149,8 @@
     <!-- JavaScript Files -->
     <script src="{{ url_for('static', filename='js/chat_room.js') }}"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script>
+      var iconUrl = "{{ url_for('static', filename='remchat_logo.png') }}"; // Assign URL to a variable
+    </script>
   </body>
 </html>

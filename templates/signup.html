@@ -105,5 +105,47 @@
 
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/verify_passwd.js') }}"></script>
+    <script>
+      // Get the input elements
+      const nameInput = document.getElementById("name");
+      const usernameInput = document.getElementById("username");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+
+      // Load the saved values from local storage
+      window.onload = function () {
+        const savedName = localStorage.getItem("name");
+        const savedUsername = localStorage.getItem("username");
+        const savedEmail = localStorage.getItem("email");
+
+        if (savedName) {
+          nameInput.value = savedName;
+        }
+
+        if (savedUsername) {
+          usernameInput.value = savedUsername;
+        }
+
+        if (savedEmail) {
+          emailInput.value = savedEmail;
+        }
+      };
+
+      // Save the values to local storage when the input changes
+      nameInput.addEventListener("input", function () {
+        localStorage.setItem("name", nameInput.value);
+      });
+
+      usernameInput.addEventListener("input", function () {
+        localStorage.setItem("username", usernameInput.value);
+      });
+
+      emailInput.addEventListener("input", function () {
+        localStorage.setItem("email", emailInput.value);
+      });
+
+      // Note: Do not save password fields to local storage for security reasons
+    </script>
   </body>
 </html>

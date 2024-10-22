@@ -1,7 +1,7 @@
 from flask import session, request, flash, redirect, url_for, render_template
 from functions.get_db_connection import get_db_connection
 from functions.system_picture import system_picture
-import datetime
+from flask_babel import format_date, format_time
 
 def chat_room(user_id, current_user_id, current_username):
     """
@@ -77,7 +77,7 @@ def enhance_chat_history(chat_history, cursor, current_user_id):
         enhanced_chat_history.append({
             'sender_name': sender_name,
             'message': chat[2],
-            'timestamp': chat[3]
+            'timestamp': format_time(chat[3].time()) + " " + format_date(chat[3].date())
         })
     return enhanced_chat_history
 

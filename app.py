@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect, session, flash
+from flask_babel import Babel 
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_session import Session
 import datetime
@@ -27,6 +28,9 @@ from posts.post_comment import comment_page
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "i_don't_have_it_yet"
 app.config['SESSION_TYPE'] = "filesystem"
+
+app.config['BABEL_DEFAULT_LOCALE'] = "en"
+babel = Babel(app)
 
 # Initialize session and Socket.IO
 Session(app)
@@ -144,20 +148,19 @@ def handle_message(data):
         # Emit message to the room
         username = session.get('username')
         emit('message', {'msg': msg, 'user': username}, room=room)
+       
 
         # Insert the message into the database
         cursor.execute("""INSERT INTO messages (sender_id, receiver_id, message, timestamp) 
                           VALUES (%s, %s, %s, %s)""",
                        (session.get('user_id'), user_id, msg, datetime.datetime.now()))
+        print(msg)
         conn.commit()
 
     except Exception as e:
         print(f"Error handling message: {e}")
         conn.rollback()  # Rollback in case of error
 
-    finally:
-        cursor.close()
-        conn.close()
 
 @socketio.on('leave')
 def on_leave(data):
