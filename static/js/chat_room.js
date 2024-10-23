@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var chatHistory = document.getElementById("chat-history");
+  const chatHistory = document.getElementById("chat-history");
 
   if (chatHistory) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -11,19 +11,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-var socket = io(); // Initialize Socket.IO
+const socket = io(); // Initialize Socket.IO
 
-var myDiv = document.getElementById("targetUsername");
-var targetUsername = myDiv ? myDiv.getAttribute("data-value") : "";
-
-var myDiv2 = document.getElementById("room_id");
-var room_id = myDiv2 ? myDiv2.getAttribute("data-value") : "";
+const targetUsername =
+  document.getElementById("targetUsername")?.getAttribute("data-value") || "";
+const room_id =
+  document.getElementById("room_id")?.getAttribute("data-value") || "";
 
 socket.on("connect", function () {
-  const room = room_id; // Ensure the room is passed from Flask correctly
-  console.log("Joining room: " + room);
+  console.log("Joining room: " + room_id);
   socket.emit("join", {
-    room: room,
+    room: room_id,
     target_username: targetUsername,
   });
 });
@@ -31,15 +29,13 @@ socket.on("connect", function () {
 // Function to show notifications
 function showNotification(title, message) {
   if (Notification.permission === "granted") {
-    var notification = new Notification(title, {
+    const notification = new Notification(title, {
       body: message,
       icon: iconUrl,
     });
 
     // Set the notification to disappear after 5 seconds
-    setTimeout(function () {
-      notification.close();
-    }, 5000); // 5 seconds
+    setTimeout(() => notification.close(), 5000); // 5 seconds
   }
 }
 
@@ -47,33 +43,32 @@ function showNotification(title, message) {
 socket.on("message", function (data) {
   console.log("Message received: ", data);
 
-  var sessionUser = document.getElementById("sessionUsername");
-  var sessionUsername = sessionUser
-    ? sessionUser.getAttribute("data-username")
-    : "";
-
-  var chatHistory = document.getElementById("chat-history");
-  var chatBox = document.createElement("div");
+  const sessionUsername =
+    document.getElementById("sessionUsername")?.getAttribute("data-username") ||
+    "";
+  const chatHistory = document.getElementById("chat-history");
+  const chatBox = document.createElement("div");
 
   // Add data attributes to store sender and receiver information
   chatBox.setAttribute("data-sender", data.user);
 
   // Sanitize message content using DOMPurify
-  var sanitizedMessage = DOMPurify.sanitize(data.msg);
+  const sanitizedMessage = DOMPurify.sanitize(data.msg);
+
+  // Format timestamp
+  const timestamp = new Date().toLocaleString();
 
   // Message structure using correct class names
-  // <small class="sender-info"><em>${data.user}</em></small><br />
   chatBox.innerHTML = `
     <span class="message-content">${sanitizedMessage}</span><br />
-    <small class="timestamp-info"><em>${new Date().toLocaleString()}</em></small>
+    <small class="timestamp-info"><em>${timestamp}</em></small>
   `;
 
   // Check if the sender is the current user and align accordingly
-  if (data.user === sessionUsername) {
-    chatBox.classList.add("chat-box", "sent");
-  } else {
-    chatBox.classList.add("chat-box", "received");
-  }
+  chatBox.classList.add(
+    "chat-box",
+    data.user === sessionUsername ? "sent" : "received"
+  );
 
   // Append the new message to the chat history
   if (chatHistory) {
@@ -88,16 +83,17 @@ socket.on("message", function (data) {
 });
 
 function sendMessage() {
-  var message = document.querySelector("textarea[name='message']").value;
-  var userId = document.getElementById("chat-history").dataset.userId;
-  var room = room_id;
+  const message = document
+    .querySelector("textarea[name='message']")
+    .value.trim();
+  const userId = document.getElementById("chat-history").dataset.userId;
 
   if (message) {
-    console.log("Sending message: ", message + " to " + room);
-    socket.emit("message", { msg: message, user_id: userId, room: room });
+    console.log("Sending message: ", message + " to " + room_id);
+    socket.emit("message", { msg: message, user_id: userId, room: room_id });
 
     document.querySelector("textarea[name='message']").value = ""; // Clear input
   } else {
-    flash("Message cannot be empty.", "warning"); // Flash message if empty
+    alert("Message cannot be empty."); // Alert user if empty
   }
 }

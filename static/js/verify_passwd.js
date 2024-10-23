@@ -3,6 +3,7 @@ document.getElementById("myForm").addEventListener("submit", function (e) {
   const confirmPassword = document.getElementById("confirmPassword").value;
   const errorMessage = document.getElementById("errorMessage");
 
+  // Check if passwords match
   if (password !== confirmPassword) {
     e.preventDefault(); // Prevent form submission
     errorMessage.textContent = "Passwords do not match!";
@@ -14,4 +15,16 @@ document.getElementById("myForm").addEventListener("submit", function (e) {
   } else {
     errorMessage.textContent = ""; // Clear error message if passwords match
   }
+});
+
+// Clear error message on input
+const passwordField = document.getElementById("password");
+const confirmPasswordField = document.getElementById("confirmPassword");
+
+passwordField.addEventListener("input", () => {
+  document.getElementById("errorMessage").textContent = "";
+});
+
+confirmPasswordField.addEventListener("input", () => {
+  document.getElementById("errorMessage").textContent = "";
 });

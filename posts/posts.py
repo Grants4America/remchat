@@ -3,15 +3,13 @@ from functions.get_db_connection import get_db_connection
 from flask_babel import format_date, format_time
 from functions.system_picture import system_picture
 
-from flask import render_template, session, flash, request
-from functions.get_db_connection import get_db_connection  # Adjust the import according to your project structure
-
 def load_paginated_posts():
     """
-    Loads posts for the specified page with pagination.
+    Loads posts for the specified page with pagination, and enriches them with user details,
+    like status, comment counts, and proper date formatting.
 
     Args:
-        page (int): The page number to load.
+        None.
 
     Returns:
         Response: Renders the posts page with either the fetched posts or an empty list.
@@ -25,6 +23,7 @@ def load_paginated_posts():
     with get_db_connection() as conn:
         with conn.cursor() as cursor:
             try:
+                # Retrieve random posts IDs if not already in session
                 if 'random_ids' not in session:
                     cursor.execute("SELECT id FROM posts ORDER BY RAND() LIMIT 1000")
                     random_ids = [row[0] for row in cursor.fetchall()]
@@ -33,86 +32,64 @@ def load_paginated_posts():
                 
                 random_ids = session['random_ids'][start:end]
                 if not random_ids:
-                    return render_template('posts.html', posts=[])  # Render an empty posts page
+                    return render_template('posts.html', posts=[])  # Render an empty posts page if no posts are found
 
+                # Build the format string for the SQL query
                 format_string = ', '.join(['%s'] * len(random_ids))
-               
-                # Fetch posts with pagination
-                query = f"SELECT id, user_id, content, picture, created_at, likes FROM posts WHERE id IN ({format_string})"
-                cursor.execute(query, tuple(random_ids))
-                
-                post_contents = [row for row in cursor.fetchall()]  # Get the fetched posts
-                # post_contents = sorted(post_contents, key=lambda user: user.id)
 
-                # Retrieve the current user's ID from the session
-                total_pages = (session['total_posts'] + per_page -1) // per_page
-                current_user_id = session.get('user_id')  # Ensure session['user_id'] exists
+                # Fetch posts with pagination and include comment_count in the same query
+                query = f"""
+                    SELECT id, user_id, content, picture, created_at, likes, comment_count 
+                    FROM posts 
+                    WHERE id IN ({format_string})
+                """
+                cursor.execute(query, tuple(random_ids))
+                post_contents = cursor.fetchall()
+
+                # Calculate total pages
+                total_pages = (session['total_posts'] + per_page - 1) // per_page
+                current_user_id = session.get('user_id')  # Ensure user is logged in
                 post_ids = [post[0] for post in post_contents]  # Collect post IDs for likes query
                 
-                # Prepare user IDs for fetching user details
-                user_ids = [post[1] for post in post_contents]  # Get user_id from post_contents
+                # Fetch user details for the post creators
+                user_ids = [post[1] for post in post_contents]
                 placeholders = ', '.join(['%s'] * len(user_ids))
                 cursor.execute(f"SELECT id, name, profile_picture FROM users WHERE id IN ({placeholders})", tuple(user_ids))
-                user_details = cursor.fetchall()  # Get user details
+                user_details = {row[0]: {'name': row[1], 'picture': row[2]} for row in cursor.fetchall()}
 
-                # Extract user details for further processing
-                creator_ids = [row[0] for row in user_details]
-                creator_names = [row[1] for row in user_details]
-                creator_pictures = [row[2] for row in user_details]
-
-                liked_posts = []  # Initialize list to store liked post IDs
+                # Fetch liked post IDs for the current user
+                liked_posts = set()
                 if post_ids:
-                    # Fetch liked post IDs in one query
                     placeholders = ','.join(['%s'] * len(post_ids))
-                    query = f"SELECT post_id FROM likes WHERE user_id = %s AND post_id IN ({placeholders})"
-                    cursor.execute(query, [current_user_id] + post_ids)
+                    cursor.execute(f"SELECT post_id FROM likes WHERE user_id = %s AND post_id IN ({placeholders})", [current_user_id] + post_ids)
                     liked_posts = {row[0] for row in cursor.fetchall()}  # Set of liked post IDs
 
-                processed_posts = []  # Initialize list for processed post data
+                # Process and enrich each post with additional details
+                processed_posts = []
                 for post in post_contents:
-                    post_id, user_id, content, picture, created_at, likes = post  # Unpack post data
-
-                    if session['user_id'] == user_id:
-                        is_my_post = True
-                    else:
-                        is_my_post = False
-
-                    # Find creator name and picture based on user_id
-                    i = 0
-                    for _id in creator_ids:
-                        if _id == user_id:
-                            creator_name = creator_names[i]
-                            creator_picture = creator_pictures[i]
-                            break  # Exit the loop once the correct user is found
-                        else:
-                            i += 1
-
-                    cursor.execute("""SELECT comment_count FROM posts WHERE id = %s""", (post_id,))
-                    comment_count = cursor.fetchone()[0]
-
-
-                    # Create a dictionary for the processed post data
+                    post_id, user_id, content, picture, created_at, likes, comment_count = post
+                    
+                    creator = user_details.get(user_id, {'name': 'Unknown', 'picture': system_picture()})
                     processed_post = {
                         'id': post_id,
                         'user_id': user_id,
                         'content': content,
                         'picture': picture.decode('utf-8') if picture else None,
-                        'created_at': format_date(created_at.date()) + " " +format_time(created_at.time()),
+                        'created_at': format_date(created_at.date()) + " " + format_time(created_at.time()),
                         'likes': likes or 0,  # Default to 0 if None
                         'is_liked_by_current_user': post_id in liked_posts,
-                        'creator_name': creator_name,
-                        'creator_picture': creator_picture.decode('utf-8') if creator_picture else system_picture(),  # Assuming `system_picture` returns a default picture
-                        'is_my_post': is_my_post,
+                        'creator_name': creator['name'],
+                        'creator_picture': creator['picture'].decode('utf-8') if creator['picture'] else system_picture(),
+                        'is_my_post': session['user_id'] == user_id,
                         'comment_count': comment_count
                     }
                     
-                    processed_posts.append(processed_post)  # Append processed post data
+                    processed_posts.append(processed_post)  # Add to the list of processed posts
 
-                # Check if there are no processed posts and flash a message if needed
                 if not processed_posts:
                     flash('No posts yet!', 'info')
 
-                processed_posts.sort(key=lambda user: user['created_at'], reverse=True)
+                processed_posts.sort(key=lambda post: post['created_at'], reverse=True)
                 return render_template('posts.html', posts=processed_posts, page=page, total_pages=total_pages)  # Render the posts template
 
             except Exception as e:

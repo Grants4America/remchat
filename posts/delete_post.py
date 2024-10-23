@@ -12,17 +12,18 @@ def delete_post(post_id):
         Response: Redirects to the posts view with a flash message indicating success or error.
     """
     try:
+        # Get a connection and execute the delete operation
         with get_db_connection() as conn:
             with conn.cursor() as cursor:
-                # Execute the delete query
+                # Execute the DELETE query for the post
                 cursor.execute("DELETE FROM posts WHERE id = %s", (post_id,))
                 conn.commit()  # Commit the transaction
 
                 # Flash a success message
                 flash("Post deleted successfully", "info")
     except Exception as e:
-        # Flash an error message if the operation fails
+        # Flash an error message if something goes wrong
         flash(f'An error occurred while deleting the post: {str(e)}', 'danger')
     
-    # Redirect to the posts view
+    # Redirect to the posts view page
     return redirect(url_for('posts_view', username=session['username']))

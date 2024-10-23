@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", (event) => {
+  // Constants
+  const FLASH_MESSAGE_DURATION = 5000; // Duration before fading out flash messages
+  const FLASH_FADE_OUT_DURATION = 1000; // Duration for fade out effect
+
   // Clear form data on page reload
   const forms = document.querySelectorAll("form");
   forms.forEach((form) => {
@@ -14,13 +18,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
   setTimeout(() => {
     const flashes = document.querySelectorAll(".flashes .alert");
     flashes.forEach((flash) => {
-      flash.style.transition = "opacity 1s ease-out";
+      flash.style.transition = `opacity 1s ease-out`;
       flash.style.opacity = 0;
       setTimeout(() => {
         flash.remove();
-      }, 1000);
+      }, FLASH_FADE_OUT_DURATION);
     });
-  }, 5000);
+  }, FLASH_MESSAGE_DURATION);
 
   // Navbar toggle functionality
   const navToggle = document.querySelector(".nav-toggle");
@@ -30,7 +34,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     // Check for elements before adding event listener
     navToggle.addEventListener("click", function () {
       navbar.classList.toggle("show");
-      // Optional: Toggle ARIA attributes for accessibility
+      // Toggle ARIA attributes for accessibility
       const isExpanded = navbar.classList.contains("show");
       navToggle.setAttribute("aria-expanded", isExpanded);
       navToggle.setAttribute("aria-controls", "navbar");
@@ -38,11 +42,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
 });
 
+// Save scroll position and page URL before unloading the page
 window.addEventListener("beforeunload", function () {
   localStorage.setItem("scrollPosition", window.scrollY);
   localStorage.setItem("pageURL", window.location.href);
 });
 
+// Also save scroll position and page URL when the page is hidden
 window.addEventListener("pagehide", function () {
   localStorage.setItem("scrollPosition", window.scrollY);
   localStorage.setItem("pageURL", window.location.href);

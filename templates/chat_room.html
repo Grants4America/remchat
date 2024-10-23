@@ -18,18 +18,13 @@
   </head>
   <body>
     <header>
-      <!-- Logo and Site Title -->
       <img
         src="{{ url_for('static', filename='remchat_logo.png') }}"
         alt="Remchat Logo"
         class="logo"
       />
       <h3 class="site-title">CHATS</h3>
-
-      <!-- Navigation Toggle Button -->
       <button class="nav-toggle">☰</button>
-
-      <!-- Navigation Links -->
       <nav class="navbar">
         <a
           href="{{ url_for('dashboard', username=session['username']) }}"
@@ -61,7 +56,6 @@
     </header>
 
     <section>
-      <!-- Creator Information Section -->
       <div class="creator_info" style="position: fixed; z-index: 2000">
         <img
           class="creator-image"
@@ -75,7 +69,6 @@
 
     <main class="container">
       <div class="chat-container">
-        <!-- Flash Messages Section -->
         {% with messages = get_flashed_messages(with_categories=true) %} {% if
         messages %}
         <ul class="flashes">
@@ -85,7 +78,6 @@
         </ul>
         {% endif %} {% endwith %}
 
-        <!-- Chat History Section -->
         <div
           id="chat-history"
           class="chat-history"
@@ -95,21 +87,10 @@
           <div
             class="chat-box {% if 'You' in chat.sender_name %} sent {% else %} received {% endif %}"
             data-sender="{{ chat.sender_name }}"
-            id="myDiv"
           >
-            <!-- Sender Name (for received messages only) -->
-            <!-- {% if 'You' not in chat.sender_name %}
-            <div class="sender-info">
-              <small><em>{{ chat.sender_name }}</em></small>
-            </div>
-            {% endif %} -->
-
-            <!-- Message Content -->
             <div class="message-content">
               <span class="messages">{{ chat.message }}</span>
             </div>
-
-            <!-- Timestamp -->
             <div class="timestamp-info">
               <small class="timestamp"><em>{{ chat.timestamp }}</em></small>
             </div>
@@ -117,7 +98,6 @@
           {% endfor %}
         </div>
 
-        <!-- Message Form Section -->
         <div class="form-container">
           <form
             method="POST"
@@ -134,9 +114,7 @@
             <button type="submit" class="submit-button">Send &rArr;</button>
           </form>
         </div>
-        <br />
 
-        <!-- Hidden Data Divs for JavaScript -->
         <div id="targetUsername" data-value="{{ user_info.name }}"></div>
         <div id="room_id" data-value="{{ room }}"></div>
         <div
@@ -146,7 +124,6 @@
       </div>
     </main>
 
-    <!-- JavaScript Files -->
     <script src="{{ url_for('static', filename='js/chat_room.js') }}"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     <script>

@@ -15,48 +15,45 @@ def chat_room(user_id, current_user_id, current_username):
     Returns:
         Rendered HTML template of the chat room with the chat history.
     """
-    conn = get_db_connection()
+    if not session.get('username'):
+        flash('You need to log in first!', 'warning')
+        return redirect(url_for('index'))
 
     # Generate a unique room identifier based on user IDs
     room = f"{min(current_user_id, user_id)}__{max(current_user_id, user_id)}"
 
-    if not conn:
-        flash('Database connection error!', 'danger')
-        return redirect(url_for('dashboard', username=session.get('username')))
-
-    cursor = conn.cursor()
-    cursor.execute("SELECT name, profile_picture FROM users WHERE id = %s", (user_id,))
-    user_info = cursor.fetchone()
-
-    # Process user information
-    if user_info:
-        processed_info = {
-            'name': user_info[0],
-            'profile_picture': user_info[1].decode('utf-8') if user_info[1] else system_picture()
-        }
-
     try:
-        # Fetch chat history between the two users
-        cursor.execute(""" 
-            SELECT sender_id, receiver_id, message, timestamp 
-            FROM messages 
-            WHERE (sender_id = %s AND receiver_id = %s) 
-            OR (sender_id = %s AND receiver_id = %s) 
-            ORDER BY timestamp 
-        """, (current_user_id, user_id, user_id, current_user_id))
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT name, profile_picture FROM users WHERE id = %s", (user_id,))
+            user_info = cursor.fetchone()
 
-        chat_history = cursor.fetchall()
-        enhanced_chat_history = enhance_chat_history(chat_history, cursor, current_user_id)
+            if not user_info:
+                flash('User not found!', 'warning')
+                return redirect(url_for('dashboard', username=current_username))
 
-        return render_template('chat_room.html', chat_history=enhanced_chat_history, user_id=user_id, user_info=processed_info, current_username=current_username, target_username=user_info[0], room=room)
+            processed_info = {
+                'name': user_info[0],
+                'profile_picture': user_info[1].decode('utf-8') if user_info[1] else system_picture()
+            }
+
+            # Fetch chat history between the two users
+            cursor.execute(""" 
+                SELECT sender_id, receiver_id, message, timestamp 
+                FROM messages 
+                WHERE (sender_id = %s AND receiver_id = %s) 
+                OR (sender_id = %s AND receiver_id = %s) 
+                ORDER BY timestamp 
+            """, (current_user_id, user_id, user_id, current_user_id))
+
+            chat_history = cursor.fetchall()
+            enhanced_chat_history = enhance_chat_history(chat_history, cursor, current_user_id)
+
+            return render_template('chat_room.html', chat_history=enhanced_chat_history, user_id=user_id, user_info=processed_info, current_username=current_username, target_username=user_info[0], room=room)
 
     except Exception as e:
         flash(f'An error occurred: {str(e)}', 'danger')
-        return redirect(url_for('dashboard', username=session.get('username')))
-    
-    finally:
-        cursor.close()
-        conn.close()
+        return redirect(url_for('dashboard', username=current_username))
 
 def enhance_chat_history(chat_history, cursor, current_user_id):
     """
@@ -90,7 +87,8 @@ def get_username(user_id, cursor):
         cursor (cursor): The database cursor for executing queries.
 
     Returns:
-        str: The username of the user.
+        str: The username of the user, or None if not found.
     """
     cursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
-    return cursor.fetchone()[0]
+    result = cursor.fetchone()
+    return result[0] if result else None  # Return None if no username found

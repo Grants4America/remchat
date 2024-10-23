@@ -4,30 +4,21 @@ from bcrypt import hashpw, gensalt
 
 
 def check_names(name):
-    # Split the name by spaces to check if there are multiple names
+    """Check if the name contains at least two capitalized parts."""
     names = name.split()
-    
-    # Check if there is more than one name
-    if len(names) < 2:
-        return False
-    
-    # Check if each name starts with a capital letter
-    for n in names:
-        if not n[0].isupper():
-            return False
-    
-    return True
+    return len(names) >= 2 and all(n[0].isupper() for n in names)
 
 def check_password(password):
-    # Check if the password is longer than 6 characters
-    if len(password) <= 6:
-        return False
-    
-    # Check if the password contains at least one number
-    if not any(char.isdigit() for char in password):
-        return False
-    
-    return True
+    """Check if the password is at least 7 characters long and contains at least one number."""
+    return len(password) > 6 and any(char.isdigit() for char in password)
+
+def user_exists(cursor, username, email, name):
+    """Check if the user already exists based on username, email, or name."""
+    cursor.execute(
+        "SELECT * FROM users WHERE username = %s OR email = %s OR name = %s", 
+        (username, email, name)
+    )
+    return cursor.fetchone()
 
 def signup_user():
     """
@@ -39,11 +30,6 @@ def signup_user():
                   back to the signup page in case of errors.
     """
     name, username, email, password = (request.form[key] for key in ('name', 'username', 'email', 'password'))
-    conn = get_db_connection()
-
-    if not conn:
-        flash('Database connection error!', 'danger')
-        return redirect(url_for('signup'))
     
     # Validate the name format
     if not check_names(name):
@@ -54,38 +40,32 @@ def signup_user():
     if not check_password(password):
         flash('Password must be at least 7 characters long and contain at least one number.', 'danger')
         return redirect(url_for('signup'))
+
     try:
-        # Check if the username, email, or name already exists in the database
-        cursor = conn.cursor()
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
 
-        # Check if the name, username, or email already exists
-        cursor.execute(
-            "SELECT * FROM users WHERE username = %s OR email = %s OR name = %s", 
-            (username, email, name)
-        )
-        existing_user = cursor.fetchone()
-        if existing_user:
-            if existing_user[2] == username:
-                flash('Username already exists! 😞', 'danger')
-            elif existing_user[4] == email:
-                flash('Email already exists! 😞', 'danger')
-            return redirect(url_for('signup'))
+            # Check if the username, email, or name already exists in the database
+            existing_user = user_exists(cursor, username, email, name)
+            if existing_user:
+                if existing_user[2] == username:
+                    flash('Username already exists! 😞', 'danger')
+                elif existing_user[4] == email:
+                    flash('Email already exists! 😞', 'danger')
+                return redirect(url_for('signup'))
 
-        # Hash the password before storing it
-        hashed_password = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
-        
-        # Insert the new user into the database
-        cursor.execute(
-            "INSERT INTO users (name, username, email, password) VALUES (%s, %s, %s, %s)",
-            (name, username, email, hashed_password)
-        )
-        conn.commit()
-        flash('Registration successful! 🎉', 'success')
+            # Hash the password before storing it
+            hashed_password = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
+            
+            # Insert the new user into the database
+            cursor.execute(
+                "INSERT INTO users (name, username, email, password) VALUES (%s, %s, %s, %s)",
+                (name, username, email, hashed_password)
+            )
+            conn.commit()
+            flash('Registration successful! 🎉', 'success')
 
     except Exception as e:
-        flash(f'An error occurred: {str(e)}', 'danger')
-
-    finally:
-        conn.close()
-
+        flash(f'An error occurred while registering: {str(e)}', 'danger')
+    
     return redirect(url_for('index'))

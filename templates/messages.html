@@ -17,18 +17,13 @@
 
   <body>
     <header>
-      <!-- Logo and Site Title -->
       <img
         src="{{ url_for('static', filename='remchat_logo.png') }}"
         alt="Remchat Logo"
         class="logo"
       />
       <h3 class="site-title">MESSAGES</h3>
-
-      <!-- Navigation Toggle Button -->
-      <button class="nav-toggle">☰</button>
-
-      <!-- Navigation Links -->
+      <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
       <nav class="navbar">
         <a
           href="{{ url_for('dashboard', username=session['username']) }}"
@@ -120,6 +115,7 @@
           <a
             href="{{ url_for('messages_route', username=session['username'], page=page - 1, query=search_query) }}"
             class="submit-button"
+            aria-label="Previous page"
             >Previous</a
           >
           {% endif %}
@@ -128,6 +124,7 @@
           <a
             href="{{ url_for('messages_route', username=session['username'], page=page + 1, query=search_query) }}"
             class="submit-button"
+            aria-label="Next page"
             >Next</a
           >
           {% endif %}
@@ -163,7 +160,7 @@
     </main>
 
     <footer>
-      <small><p>&copy; 2024 Remchat. All rights reserved.</p></small>
+      <small>&copy; 2024 Remchat. All rights reserved.</small>
     </footer>
 
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>

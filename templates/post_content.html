@@ -23,7 +23,7 @@
         class="logo"
       />
       <h3 class="site-title">REMCHAT</h3>
-      <button class="nav-toggle">☰</button>
+      <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
       <nav class="navbar">
         <!-- Navigation Links -->
         <a
@@ -75,12 +75,14 @@
           method="POST"
           enctype="multipart/form-data"
         >
+          <label for="image" class="custom-file-label">Choose an image</label>
           <input
             type="file"
             id="image"
             name="image"
             class="custom-file-input"
             accept="image/*"
+            aria-label="Image upload"
           /><br />
           <textarea
             name="content"
@@ -88,15 +90,18 @@
             rows="5"
             cols="40"
             required
+            aria-label="Post content"
           ></textarea
           ><br />
-          <button type="submit" class="submit-button">Post</button>
+          <button type="submit" class="submit-button" aria-label="Submit post">
+            Post
+          </button>
         </form>
       </section>
     </main>
 
     <footer>
-      <small><p>&copy; 2024 Remchat. All rights reserved.</p></small>
+      <small>&copy; 2024 Remchat. All rights reserved.</small>
     </footer>
 
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>

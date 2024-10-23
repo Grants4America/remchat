@@ -56,7 +56,6 @@
     </header>
 
     <main class="container" style="background-color: #dcf8c6">
-      <!-- Flash Messages Section -->
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %}
       <ul class="flashes">
@@ -69,7 +68,6 @@
       <section class="user">
         <h2>Search</h2>
         <div>
-          <!-- User Search Form -->
           <form
             method="POST"
             action="{{ url_for('search_users_view', username=session['username']) }}"
@@ -82,6 +80,7 @@
                 placeholder="Enter username or name"
                 required
                 value="{{ search_query }}"
+                aria-label="Search for users"
               />
               <div>
                 <button type="submit" class="submit-button">Search</button>
@@ -90,7 +89,6 @@
           </form>
           <br /><br />
 
-          <!-- Search Results -->
           {% if search_results %}
           <h4>Search Results</h4>
           <ul>
@@ -115,11 +113,12 @@
             </li>
             {% endfor %}
           </ul>
+          {% else %}
+          <p>No users found matching your search criteria.</p>
           {% endif %}
         </div>
       </section>
 
-      <!-- Pagination Controls -->
       <div class="pagination">
         {% if page > 1 %}
         <a href="?page={{ page - 1 }}&q={{ query }}" class="submit-button"

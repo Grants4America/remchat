@@ -39,9 +39,10 @@
       <!-- Back to Posts Button -->
       <a
         href="{{ url_for('posts_view', username=session['username'], page=request.args.get('page', 1)) }}"
-        style="width: 10%"
         class="submit-button"
         id="back-to-posts"
+        aria-label="Back to Posts"
+        style="width: 10%"
         >⬅️</a
       >
 
@@ -57,11 +58,13 @@
             name="comment"
             placeholder="Add a comment..."
             required
+            aria-label="Comment"
           />
           <button
             type="submit"
             class="submit-button"
             style="font-weight: normal"
+            aria-label="Submit comment"
           >
             Comment
           </button>
@@ -89,8 +92,9 @@
     </main>
 
     <footer>
-      <small><p>&copy; 2024 Remchat. All rights reserved.</p></small>
+      <small>&copy; 2024 Remchat. All rights reserved.</small>
     </footer>
+
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
   </body>
 </html>

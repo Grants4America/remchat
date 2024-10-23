@@ -4,16 +4,17 @@ from functions.get_db_connection import get_db_connection
 
 def like_post(data):
     """
-    Handles the 'like_post' event triggered by the client when a user likes or unlikes a post.
+    Handles the 'like_post' event when a user likes or unlikes a post.
 
     Args:
-        data (dict): Contains the 'post_id' for the post the user is interacting with.
+        data (dict): Contains the 'post_id' for the post the user interacts with.
 
-    Retrieves the current user's ID from the session, checks if they have already liked the post, and
-    either increments or decrements the like count in the database.
+    The function checks if the current user has already liked the post:
+        - If yes, it unlikes the post and decrements the like count.
+        - If no, it likes the post and increments the like count.
 
     Emits:
-        - 'like_response': A response to the client with a success or error message and status.
+        - 'like_response': Sends a response back to the client with a success or error message.
 
     Raises:
         Exception: If any database operation fails.

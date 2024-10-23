@@ -25,7 +25,6 @@
       <h3 class="site-title">REMCHAT</h3>
       <button class="nav-toggle">☰</button>
       <nav class="navbar">
-        <!-- Navigation Links -->
         <a href="{{ url_for('index') }}" class="submit-button">Login</a>
         <a href="{{ url_for('signup') }}" class="submit-button"
           >Create Account</a
@@ -46,11 +45,10 @@
     <main class="container">
       <img
         src="{{ url_for('static', filename='remchat_logo.png') }}"
-        alt="Remchat Logo"
+        alt="Remchat Application Logo"
         width="100"
         height="auto"
         sizes="(max-width: 600px) 100w, 50vw"
-        srcset=""
       />
       <div>
         <h1>Sign Up</h1>
@@ -90,12 +88,14 @@
             required
             placeholder="Confirm Password"
           />
-          <br />
-          <span id="errorMessage" style="color: red"></span>
+          <span
+            id="errorMessage"
+            style="color: red; display: none"
+            role="alert"
+          ></span>
           <br />
           <button type="submit" class="submit-button">Sign Up</button>
         </form>
-        <br />
       </div>
     </main>
 
@@ -112,6 +112,7 @@
       const emailInput = document.getElementById("email");
       const passwordInput = document.getElementById("password");
       const confirmPasswordInput = document.getElementById("confirmPassword");
+      const errorMessage = document.getElementById("errorMessage");
 
       // Load the saved values from local storage
       window.onload = function () {
@@ -122,11 +123,9 @@
         if (savedName) {
           nameInput.value = savedName;
         }
-
         if (savedUsername) {
           usernameInput.value = savedUsername;
         }
-
         if (savedEmail) {
           emailInput.value = savedEmail;
         }
@@ -145,7 +144,15 @@
         localStorage.setItem("email", emailInput.value);
       });
 
-      // Note: Do not save password fields to local storage for security reasons
+      // Password confirmation check
+      confirmPasswordInput.addEventListener("input", function () {
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          errorMessage.textContent = "Passwords do not match.";
+          errorMessage.style.display = "block";
+        } else {
+          errorMessage.style.display = "none";
+        }
+      });
     </script>
   </body>
 </html>
