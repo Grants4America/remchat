@@ -41,5 +41,5 @@ def login_user():
         else:
             flash('Database connection error!', 'danger')
 
-    flash('Invalid username or password! 😒', 'danger')
+    flash('Invalid username or password! 🤔', 'danger')
     return redirect(url_for('index'))

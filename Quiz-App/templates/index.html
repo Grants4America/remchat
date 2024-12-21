@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="quiz">
+      <h1>Simple Quiz</h1>
+      <div class="questionsAndOptions">
+        {% for question in questions %}
+        <p class="question">{{ question['question'] }}</p>
+        {% for answer in question['answers'] %}
+        <button
+          class="option"
+          data-correct="{{ answer['correct'] }}"
+          onclick="checkAnswer(this)"
+        >
+          {{ answer['text'] }}
+        </button>
+        {% endfor %} {% endfor %}
+      </div>
+      <div class="pagination-btn">
+        {% if page > 1 %}
+        <a href="{{ url_for('index', page=page - 1) }}">Previous Page</a>
+        {% endif %}
+        <small>Page {{ page }} of {{ total_pages }}</small>
+        {% if page < total_pages %}
+        <a href="{{ url_for('index', page=page + 1) }}">Next Page</a>
+        {% endif %}
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
